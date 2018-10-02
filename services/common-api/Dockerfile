@@ -13,6 +13,7 @@ RUN set -x \
     --with-xml2-config=/usr/bin/xml2-config \
     --with-xslt-config=/usr/bin/xslt-config
 
+COPY ./vendor/gems/common_models /app/vendor/gems/common_models
 RUN gem install bundler
 
 WORKDIR /app
