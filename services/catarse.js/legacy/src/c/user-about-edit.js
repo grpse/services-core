@@ -28,7 +28,9 @@ const userAboutEdit = {
                 email_confirmation: m.prop('')
             },
             passwordHasError = m.prop(false),
-            emailHasError = m.prop(false),
+            emailHasErrorOnFrontend = m.prop(false),
+            emailFrontendErrorMessage = m.prop(''),
+            emailHasErrorOnBackend = m.prop(false),
             showEmailForm = h.toggleProp(false, true),
             showSuccess = m.prop(false),
             showError = m.prop(false),
@@ -132,6 +134,7 @@ const userAboutEdit = {
                         parsedErrors.resetFieldErrors();
                     }
                     parsedErrors = userAboutVM.mapRailsErrors(err.errors_json);
+                    emailHasErrorOnBackend(parsedErrors.hasError('email'));
                     errors('Erro ao atualizar informações.');
 
                     showError(true);
@@ -153,11 +156,12 @@ const userAboutEdit = {
             }, {}),
             validateEmailConfirmation = () => {
                 if (fields.email() !== fields.email_confirmation()) {
-                    emailHasError(true);
+                    emailHasErrorOnFrontend(true);
+                    emailFrontendErrorMessage('Confirmação de email está incorreta.');
                 } else {
-                    emailHasError(false);
+                    emailHasErrorOnFrontend(false);
                 }
-                return !emailHasError();
+                return !emailHasErrorOnFrontend();
             },
             validatePassword = () => {
                 const pass = String(fields.password());
@@ -206,7 +210,9 @@ const userAboutEdit = {
             errors,
             uploading,
             onSubmit,
-            emailHasError,
+            emailHasErrorOnBackend,
+            emailHasErrorOnFrontend,
+            emailFrontendErrorMessage,
             showEmailForm,
             validateEmailConfirmation,
             passwordHasError,
@@ -286,9 +292,12 @@ const userAboutEdit = {
                                                 'Novo email'
                                             ),
                                             m('input.w-input.text-field.positive[id=\'new_email\'][name=\'new_email\'][type=\'email\']', {
-                                                class: ctrl.emailHasError() ? 'error' : '',
+                                                class: (ctrl.emailHasErrorOnFrontend() || ctrl.emailHasErrorOnBackend()) ? 'error' : '',
                                                 value: fields.email(),
-                                                onfocus: () => ctrl.emailHasError(false),
+                                                onfocus: () => {
+                                                    ctrl.emailHasErrorOnFrontend(false);
+                                                    ctrl.emailHasErrorOnBackend(false);
+                                                },
                                                 onchange: m.withAttr('value', fields.email)
                                             })
                                         ]),
@@ -297,16 +306,18 @@ const userAboutEdit = {
                                                 'Confirmar novo email'
                                             ),
                                             m('input.string.required.w-input.text-field.w-input.text-field.positive[id=\'new_email_confirmation\'][name=\'user[email]\'][type=\'text\']', {
-                                                class: ctrl.emailHasError() ? 'error' : '',
+                                                class: (ctrl.emailHasErrorOnFrontend() || ctrl.emailHasErrorOnBackend()) ? 'error' : '',
                                                 value: fields.email_confirmation(),
-                                                onfocus: () => ctrl.emailHasError(false),
+                                                onfocus: () => {
+                                                    ctrl.emailHasErrorOnFrontend(false);
+                                                    ctrl.emailHasErrorOnBackend(false);
+                                                },
                                                 onblur: ctrl.validateEmailConfirmation,
                                                 onchange: m.withAttr('value', fields.email_confirmation)
                                             })
                                         ]),
-                                        ctrl.emailHasError() ? m(inlineError, {
-                                            message: 'Confirmação de email está incorreta.'
-                                        }) : ''
+                                        ctrl.emailHasErrorOnFrontend() ? m(inlineError, { message: ctrl.emailFrontendErrorMessage() } ) : '',
+                                        ctrl.emailHasErrorOnBackend() ? ctrl.parsedErrors.inlineError('email') : ''
                                     ])
                                 ]),
                                 m('.w-row.u-marginbottom-30.card.card-terciary', [
