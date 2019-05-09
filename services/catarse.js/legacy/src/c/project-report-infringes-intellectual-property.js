@@ -60,7 +60,7 @@ const projectReportInfringesIntellectualProperty = {
 		               [
 			                 m('form', {
                      onsubmit: state.sendReport,
-                     config: state.checkScroll
+                     oncreate: state.checkScroll
                  },
 				                 [
 					                   m('.report-option.w-radio',

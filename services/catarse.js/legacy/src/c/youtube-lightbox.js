@@ -73,7 +73,7 @@ const youtubeLightbox = {
                             m('.w-lightbox-frame', [
                                 m('figure.w-lightbox-figure', [
                                     m('img.w-lightbox-img.w-lightbox-image[src=\'data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22940%22%20height=%22528%22/%3E\']'),
-                                    m('#ytvideo.embedly-embed.w-lightbox-embed', { config: state.setYoutube })
+                                    m('#ytvideo.embedly-embed.w-lightbox-embed', { oncreate: state.setYoutube })
                                 ])
                             ])
                         ]),

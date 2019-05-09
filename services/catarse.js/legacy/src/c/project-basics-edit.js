@@ -124,10 +124,8 @@ const projectBasicsEdit = {
             return false;
         };
 
-        const editTag = (el, isinit) => {
-            if (!isinit) {
-                el.onkeyup = triggerTagSearch;
-            }
+        const editTag = (localVnode) => {
+            localVnode.dom.onkeyup = triggerTagSearch;
         };
 
         vnode.state = {
@@ -229,7 +227,7 @@ const projectBasicsEdit = {
                                 onclick: () => state.isEditingTags(false),
                                 children: [
                                     m('input.string.optional.w-input.text-field.positive.medium[type="text"]', {
-                                        config: state.editTag,
+                                        oncreate: state.editTag,
                                         class: vm.e.hasError('public_tags') ? 'error' : '',
                                         onfocus: () => vm.e.inlineError('public_tags', false)
                                     }),

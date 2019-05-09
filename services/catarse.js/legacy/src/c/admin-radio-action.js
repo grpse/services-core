@@ -120,7 +120,7 @@ const adminRadioAction = {
             m('button.btn.btn-small.btn-terciary', {
                 onclick: state.toggler.toggle
             }, data.outerLabel), (state.toggler()) ?
-            m('.dropdown-list.card.u-radius.dropdown-list-medium.zindex-10', { config: state.unload }, [
+            m('.dropdown-list.card.u-radius.dropdown-list-medium.zindex-10', { oncreate: state.unload }, [
                 m('form.w-form', {
                     onsubmit: state.submit
                 }, (!state.complete()) ? [

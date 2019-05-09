@@ -528,7 +528,7 @@ const userAboutEdit = {
                                         m('form.w-hidden', {
                                             action: `/${window.I18n.locale}/users/${user.id}`,
                                             method: 'post',
-                                            config: state.setDeleteForm
+                                            oncreate: state.setDeleteForm
                                         }, [
                                             m(`input[name='authenticity_token'][type='hidden'][value='${h.authenticityToken()}']`),
                                             m('input[name=\'_method\'][type=\'hidden\'][value=\'delete\']')

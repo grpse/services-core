@@ -60,7 +60,7 @@ const thankYou = {
         };
     },
     view: function({state, attrs}) {
-        return m('#thank-you', { config: state.setEvents }, [
+        return m('#thank-you', { oncreate: state.setEvents }, [
             m('.page-header.u-marginbottom-30',
               m('.w-container',
                 m('.w-row',

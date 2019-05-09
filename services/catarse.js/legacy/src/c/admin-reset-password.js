@@ -81,7 +81,7 @@ const adminResetPassword = {
                 onclick: state.toggler.toggle
             }, data.outerLabel), (state.toggler()) ?
             m('.dropdown-list.card.u-radius.dropdown-list-medium.zindex-10', {
-                config: state.unload
+                oncreate: state.unload
             }, [
                 m('form.w-form', {
                     onsubmit: state.submit

@@ -1,24 +1,24 @@
-import mq from 'mithril-query';
-import h from '../../src/h';
+import mq from "mithril-query";
+import h from "../../src/h";
 
 describe("helper methods", () => {
     describe("h.formatNumber", () => {
         let number = null,
-                formatNumber = h.formatNumber;
+            formatNumber = h.formatNumber;
 
         it("should format number", () => {
-            number = 120.20;
-            expect(formatNumber(number)).toEqual('120');
-            expect(formatNumber(number, 2, 3)).toEqual('120,20');
-            expect(formatNumber(number, 2, 2)).toEqual('1.20,20');
+            number = 120.2;
+            expect(formatNumber(number)).toEqual("120");
+            expect(formatNumber(number, 2, 3)).toEqual("120,20");
+            expect(formatNumber(number, 2, 2)).toEqual("1.20,20");
         });
     });
 
-    describe('h.rewardSouldOut', () => {
+    describe("h.rewardSouldOut", () => {
         let reward = null,
-                rewardSouldOut = h.rewardSouldOut;
+            rewardSouldOut = h.rewardSouldOut;
 
-        it('return true when reward already sould out', () => {
+        it("return true when reward already sould out", () => {
             reward = {
                 maximum_contributions: 5,
                 paid_count: 3,
@@ -28,7 +28,7 @@ describe("helper methods", () => {
             expect(rewardSouldOut(reward)).toEqual(true);
         });
 
-        it('return false when reward is not sould out', () => {
+        it("return false when reward is not sould out", () => {
             reward = {
                 maximum_contributions: 5,
                 paid_count: 3,
@@ -38,22 +38,23 @@ describe("helper methods", () => {
             expect(rewardSouldOut(reward)).toEqual(false);
         });
 
-        it('return false when reward is not defined maximum_contributions', () => {
+        it("return false when reward is not defined maximum_contributions", () => {
             reward = {
                 maximum_contributions: null,
                 paid_count: 3,
-                waiting_payment_count: 1
+                waiting_payment_count: 1,
+                run_out: false
             };
 
             expect(rewardSouldOut(reward)).toEqual(false);
         });
     });
 
-    describe('h.rewardRemaning', () => {
+    describe("h.rewardRemaning", () => {
         let reward,
-                rewardRemaning = h.rewardRemaning;
+            rewardRemaning = h.rewardRemaning;
 
-        it('should return the total remaning rewards', () => {
+        it("should return the total remaning rewards", () => {
             reward = {
                 maximum_contributions: 10,
                 paid_count: 3,
@@ -64,28 +65,28 @@ describe("helper methods", () => {
         });
     });
 
-    describe('h.parseUrl', () => {
+    describe("h.parseUrl", () => {
         let url,
-                parseUrl = h.parseUrl;
+            parseUrl = h.parseUrl;
 
-        it('should create an a element', () => {
-            url = 'http://google.com';
-            expect(parseUrl(url).hostname).toEqual('google.com');
+        it("should create an a element", () => {
+            url = "http://google.com";
+            expect(parseUrl(url).hostname).toEqual("google.com");
         });
     });
 
-    describe('h.pluralize', () => {
+    describe("h.pluralize", () => {
         let count,
-                pluralize = h.pluralize;
+            pluralize = h.pluralize;
 
-        it('should use plural when count greater 1', () => {
+        it("should use plural when count greater 1", () => {
             count = 3;
-            expect(pluralize(count, ' dia', ' dias')).toEqual('3 dias');
+            expect(pluralize(count, " dia", " dias")).toEqual("3 dias");
         });
 
-        it('should use singular when count less or equal 1', () => {
+        it("should use singular when count less or equal 1", () => {
             count = 1;
-            expect(pluralize(count, ' dia', ' dias')).toEqual('1 dia');
+            expect(pluralize(count, " dia", " dias")).toEqual("1 dia");
         });
     });
 

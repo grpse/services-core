@@ -75,11 +75,11 @@ const tooltip = {
         const width = state.width();
         return m(attrs.el, {
             onclick: state.toggle,
-            config: state.setParentPosition,
+            oncreate: state.setParentPosition,
             style: { cursor: 'pointer' }
         }, state.tooltip() ? [
             m(`.tooltip.dark[style="width: ${width}px; top: ${state.top()}px; left: ${state.left()}px;"]`, {
-                config: state.setPosition
+                oncreate: state.setPosition
             }, [
                 m('.fontsize-smallest', attrs.text)
             ])

@@ -977,7 +977,6 @@ const
 
     redactor = (name, prop) => m('textarea.input_field.redactor.w-input.text-field.bottom.jumbo.positive', {
         name,
-        //config: setRedactor(prop)
         oncreate: setRedactor(prop)
     }),
 

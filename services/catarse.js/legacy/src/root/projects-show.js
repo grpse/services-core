@@ -79,7 +79,7 @@ const projectsShow = {
             projectVM = state.projectVM;
         
         return m('.project-show', {
-            config: projectVM.setProjectPageTitle()
+            oncreate: projectVM.setProjectPageTitle()
         }, project() ? [
             state.loadUserSubscriptions(),
             m(projectHeader, {

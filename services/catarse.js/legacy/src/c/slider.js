@@ -47,19 +47,18 @@ const slider = {
                 clearInterval(interval);
                 startSliderTimer();
             },
-            config = (el, isInitialized, context) => {
-                if (!isInitialized) {
-                    translationSize(Math.max(document.documentElement.clientWidth, window.innerWidth || 0));
-                    m.redraw();
-                }
+            oncreate = () => {
+                translationSize(Math.max(document.documentElement.clientWidth, window.innerWidth || 0));
+                m.redraw();
 
-                context.onunload = () => clearInterval(interval);
-            };
+            },
+            onremove = () => clearInterval(interval);
 
         startSliderTimer();
 
         vnode.state = {
-            config,
+            oncreate,
+            onremove,
             selectedSlideIdx,
             translationSize,
             decrementSlide,
@@ -84,7 +83,8 @@ const slider = {
             };
 
         return m(`.w-slider.${wrapperClass}`, {
-            config: state.config
+            oncreate: state.oncreate,
+            onremove: state.onremove
         }, [
             m('.fontsize-larger', attrs.title),
             m('.w-slider-mask', [

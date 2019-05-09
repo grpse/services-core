@@ -204,11 +204,11 @@ const Flex = {
                     ])
                 ]), m('.w-section.section-large.bg-greenlime', [
                     m('.w-container', [
-                        m('#participe-do-debate.u-text-center', { config: h.toAnchor() }, [
+                        m('#participe-do-debate.u-text-center', { oncreate: h.toAnchor() }, [
                             m('h1.fontsize-largest.fontcolor-negative', 'Construa o flex conosco'), m('.fontsize-base.u-marginbottom-60.fontcolor-negative', 'Inicie uma conversa, pergunte, comente, critique e faça sugestões!')
                         ]),
                         m('#disqus_thread.card.u-radius[style="min-height: 50vh;"]', {
-                            config: state.addDisqus
+                            oncreate: state.addDisqus
                         })
                     ])
                 ])

@@ -144,7 +144,7 @@ const rewardSelectCard = {
                                     min: reward.minimum_value,
                                     placeholder: reward.minimum_value,
                                     type: 'tel',
-                                    config: state.setInput,
+                                    oncreate: state.setInput,
                                     onkeyup: m.withAttr('value', state.applyMask),
                                     value: state.contributionValue()
                                 })
