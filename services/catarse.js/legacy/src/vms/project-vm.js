@@ -1,43 +1,47 @@
-import m from 'mithril';
-import prop from 'mithril/stream';
-import _ from 'underscore';
-import { catarse, commonAnalytics } from '../api';
-import h from '../h';
-import models from '../models';
-import rewardVM from './reward-vm';
-import projectGoalsVM from './project-goals-vm';
-import userVM from './user-vm';
+import m from "mithril";
+import prop from "mithril/stream";
+import _ from "underscore";
+import { catarse, commonAnalytics } from "../api";
+import h from "../h";
+import models from "../models";
+import rewardVM from "./reward-vm";
+import projectGoalsVM from "./project-goals-vm";
+import userVM from "./user-vm";
 
 const currentProject = prop(),
     userDetails = prop(),
     subscriptionData = prop(),
     projectContributions = prop([]),
-    vm = catarse.filtersVM({ project_id: 'eq' }),
+    vm = catarse.filtersVM({ project_id: "eq" }),
     idVM = h.idVM;
 
 const isSubscription = (project = currentProject) => {
     if (_.isFunction(project)) {
-        return project() ? project().mode === 'sub' : false;
+        return project() ? project().mode === "sub" : false;
     }
 
-    return project ? project.mode === 'sub' : false;
+    return project ? project.mode === "sub" : false;
 };
 
-const fetchSubData = (projectUuid) => {
-    const lproject = commonAnalytics.loaderWithToken(models.projectSubscribersInfo.postOptions({ id: projectUuid }));
+const fetchSubData = projectUuid => {
+    const lproject = commonAnalytics.loaderWithToken(
+        models.projectSubscribersInfo.postOptions({ id: projectUuid })
+    );
 
-    lproject.load().then((data) => {
-        subscriptionData(data || {
-            amount_paid_for_valid_period: 0,
-            total_subscriptions: 0,
-            total_subscribers: 0,
-            new_percent: 0,
-            returning_percent: 0
-        });
+    lproject.load().then(data => {
+        subscriptionData(
+            data || {
+                amount_paid_for_valid_period: 0,
+                total_subscriptions: 0,
+                total_subscribers: 0,
+                new_percent: 0,
+                returning_percent: 0
+            }
+        );
     });
 };
 
-const setProject = project_user_id => (data) => {
+const setProject = project_user_id => data => {
     currentProject(_.first(data));
     if (isSubscription(currentProject())) {
         fetchSubData(currentProject().common_id);
@@ -53,14 +57,19 @@ const setProject = project_user_id => (data) => {
 const init = (project_id, project_user_id) => {
     vm.project_id(project_id);
 
-    const lProject = catarse.loaderWithToken(models.projectDetail.getRowOptions(vm.parameters()));
+    const lProject = catarse.loaderWithToken(
+        models.projectDetail.getRowOptions(vm.parameters())
+    );
 
     fetchParallelData(project_id, project_user_id);
 
     return lProject
         .load()
         .then(setProject(project_user_id))
-        .then(_ => m.redraw());
+        .then(_ => {
+            console.log("Trying redraw");
+            m.redraw();
+        });
 };
 
 const resetData = () => {
@@ -80,18 +89,18 @@ const fetchParallelData = (projectId, projectUserId) => {
 // FIXME: should work with data-parameters that don't have project struct
 // just ids: {project_id project_user_id user_id }
 const getCurrentProject = () => {
-    const root = document.getElementById('application');
-    const data = root && root.getAttribute('data-parameters');
+    const root = document.getElementById("application");
+    const data = root && root.getAttribute("data-parameters");
 
     if (data) {
         const jsonData = JSON.parse(data);
-            
+
         const { projectId, projectUserId } = jsonData; // legacy
         const { project_id, project_user_id } = jsonData;
 
         const project_data = {
-            project_id : (project_id || projectId),
-            project_user_id : (project_user_id || projectUserId)
+            project_id: project_id || projectId,
+            project_user_id: project_user_id || projectUserId
         };
 
         // fill currentProject when jsonData has id and mode (legacy code)
@@ -114,45 +123,60 @@ const routeToProject = (project, ref) => () => {
 
     resetData();
 
-    m.route(h.buildLink(project.permalink, ref), { project_id: project.project_id, project_user_id: project.project_user_id });
+    m.route(h.buildLink(project.permalink, ref), {
+        project_id: project.project_id,
+        project_user_id: project.project_user_id
+    });
 
     return false;
 };
 
 const setProjectPageTitle = () => {
     if (currentProject()) {
-        const projectName = currentProject().project_name || currentProject().name;
+        const projectName =
+            currentProject().project_name || currentProject().name;
 
         return projectName ? h.setPageTitle(projectName) : Function.prototype;
     }
 };
 
-const fetchProject = (projectId, handlePromise = true, customProp = currentProject) => {
+const fetchProject = (
+    projectId,
+    handlePromise = true,
+    customProp = currentProject
+) => {
     idVM.id(projectId);
 
-    const lproject = catarse.loaderWithToken(models.projectDetail.getRowOptions(idVM.parameters()));
+    const lproject = catarse.loaderWithToken(
+        models.projectDetail.getRowOptions(idVM.parameters())
+    );
 
     if (!handlePromise) {
         return lproject.load();
     } else {
         lproject
             .load()
-            .then(_.compose(customProp, _.first))
+            .then(
+                _.compose(
+                    customProp,
+                    _.first
+                )
+            )
             .then(_ => m.redraw());
         return customProp;
     }
 };
 
+const updateProject = (projectId, projectData) =>
+    m.request({
+        method: "PUT",
+        url: `/projects/${projectId}.json`,
+        data: { project: projectData },
+        config: h.setCsrfToken
+    });
 
-const updateProject = (projectId, projectData) => m.request({
-    method: 'PUT',
-    url: `/projects/${projectId}.json`,
-    data: { project: projectData },
-    config: h.setCsrfToken
-});
-
-const subscribeActionKey = 'subscribeProject';
-const storeSubscribeAction = (route) => {
+const subscribeActionKey = "subscribeProject";
+const storeSubscribeAction = route => {
     h.storeAction(subscribeActionKey, route);
 };
 
@@ -162,7 +186,6 @@ const checkSubscribeAction = () => {
         m.route.set(actionRoute);
     }
 };
-
 
 const projectVM = {
     userDetails,

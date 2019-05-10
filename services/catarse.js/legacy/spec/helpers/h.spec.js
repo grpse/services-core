@@ -32,7 +32,8 @@ describe("helper methods", () => {
             reward = {
                 maximum_contributions: 5,
                 paid_count: 3,
-                waiting_payment_count: 1
+                waiting_payment_count: 1,
+                run_out: false
             };
 
             expect(rewardSouldOut(reward)).toEqual(false);
